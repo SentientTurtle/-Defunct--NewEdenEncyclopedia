@@ -1,0 +1,33 @@
+group 'net.sentientturtle'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+repositories {
+    mavenCentral()
+}
+
+configurations {
+    native_libs
+}
+
+dependencies {
+    compile 'com.almworks.sqlite4java:sqlite4java:1.0.392'
+    compile group: 'org.json', name: 'json', version: '20180130'
+    compile group: 'org.apache.commons', name: 'commons-compress', version: '1.16.1'
+    compile group: 'commons-io', name: 'commons-io', version: '2.6'
+    compile group: 'com.intellij', name: 'annotations', version: '12.0'
+
+    native_libs group: 'com.almworks.sqlite4java', name: 'sqlite4java-win32-x64', version: '1.0.392'
+    native_libs group: 'com.almworks.sqlite4java', name: 'sqlite4java-win32-x86', version: '1.0.392'
+    native_libs group: 'com.almworks.sqlite4java', name: 'libsqlite4java-linux-amd64', version: '1.0.392'
+    native_libs group: 'com.almworks.sqlite4java', name: 'libsqlite4java-linux-i386', version: '1.0.392'
+    native_libs group: 'com.almworks.sqlite4java', name: 'libsqlite4java-osx', version: '1.0.392'
+}
+
+task installNativeLibs(type: Copy) {
+    from configurations.native_libs
+    into "$projectDir/native"
+}
+
+build.dependsOn installNativeLibs

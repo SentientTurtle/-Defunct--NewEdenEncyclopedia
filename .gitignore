@@ -1,0 +1,23 @@
+# Automatically downloaded or generated.
+# Expected files: "sqlite-latest.sqlite" (Downloaded using SDEUtils) and "GRANNY-OUT.sqlite" (Generated using GrannyParser)
+*.sqlite
+
+# Contains native libraries; Handled by gradle.
+/native/
+
+# Output; See page repository
+/pages/
+
+# Contains EVE Online "ItemIcons" from image export collection, can be found at: https://developers.eveonline.com/resource/resources
+/rsc/itemicons/
+
+# Contains temp data generated when parsing EVE Online's Granny3D models.
+/rsc/grannytemp
+
+# IDE data
+/.gradle/
+/.idea/
+/build/
+/gradle/
+/gradlew
+/gradlew.bat
