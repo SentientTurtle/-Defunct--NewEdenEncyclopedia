@@ -25,7 +25,7 @@ public class ShipPropulsion extends Component {
         Map<Integer, Attribute> attributeMap = dataSupplier.getAttributes();
         Map<Tuple2<Integer, Integer>, Double> attributeValueMap = dataSupplier.getAttributeValues();
 
-        return "<DIV class='component text_font'>\n" +
+        return "<div class='component text_font'>\n" +
                 "    <table class='propulsion_table'>\n" +
                 "        <tr>\n" +
                 "            <td colspan='1'><span class='propulsion_span' title='Maximum Velocity'><img src='" + ResourceLocation.iconOfIconID(attributeMap.get(37).iconID, dataSupplier) + "' height='32px' width='32px'>Maximum Velocity: " + dataSupplier.unitify(attributeValueMap.get(new Tuple2<>(type.typeID, 37)), attributeMap.get(47).unitID) + "</span>\n" +
@@ -34,7 +34,7 @@ public class ShipPropulsion extends Component {
                 "            </td>\n" +
                 "        </tr>\n" +
                 "    </table>\n" +
-                "</DIV>";
+                "</div>";
     }
 
     @Override

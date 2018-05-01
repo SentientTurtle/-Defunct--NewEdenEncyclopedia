@@ -37,8 +37,12 @@ public class TypeDescription extends Component {
             descriptionText = descriptionText.replace("<a href=showinfo:" + typeID + ">", new PageReference(dataSupplier.getTypes().get(Integer.valueOf(typeID)).name, PageType.TYPE).toString());
         }
         descriptionText = descriptionText
-                .replaceAll("<color='.*'>", "").replaceAll("<font .*?=\".*\">", "").replaceAll("</color>", "").replaceAll("</font>", "")  // Clear markup
-                .replaceAll("<a href=showinfo:\\d+?//\\d+?>", "");  // Clear links with itemIDs
+                .replaceAll("<color='.*'>", "") // TODO: Should probably merge these into a single regex
+                .replaceAll("<font .*?=\".*\">", "")
+                .replaceAll("<a href=showinfo:\\d+?//\\d+?>", "") // Clear links with itemIDs
+                .replace("</color>", "")
+                .replace("</font>", "")  // Clear markup
+                .trim();
 
         return "<div class='component item_description'><header class='head_font description_header'>Description: </header>" +
                 "<span class='html_text description_text text_font'>" + descriptionText + "</span></div>";

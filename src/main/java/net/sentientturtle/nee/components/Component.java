@@ -41,7 +41,11 @@ public abstract class Component {
      */
     @Language("CSS")
     public String getCSS(DataSupplier dataSupplier) {
-        return getHTML(dataSupplier).length() > 0 ? css != null ? css : (css = buildCSS()) : "";    // Return blank CSS if HTML is blank
+        return getHTML(dataSupplier).length() > 0 ?
+                css != null ?
+                        css :
+                        (css = buildCSS().replaceAll("\\s+(\\{)|(:)\\s+|;\\n\\s*(})|\\n\\s*|/\\*.*?\\*/|(,)\\s+","$1$2$3$4"))
+                : "";    // Return blank CSS if HTML is blank
     }
 
     /**

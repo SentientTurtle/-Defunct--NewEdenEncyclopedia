@@ -23,7 +23,7 @@ public class ShipSensors extends Component {
         Map<Integer, Attribute> attributeMap = dataSupplier.getAttributes();
         Map<Tuple2<Integer, Integer>, Double> attributeValueMap = dataSupplier.getAttributeValues();
 
-        return "<DIV class='component text_font'>\n" +
+        return "<div class='component text_font'>\n" +
                 "    <table class='sensor_table'>\n" +
                 "        <tr>\n" +
                 "            <td colspan='1'><span class='sensor_span' title='Targeting Range'><img src='" + ResourceLocation.iconOfIconID(attributeMap.get(76).iconID, dataSupplier) + "' height='32px' width='32px'>" + dataSupplier.unitify(attributeValueMap.getOrDefault(new Tuple2<>(type.typeID, 76), 0.0), attributeMap.get(76).unitID) + "</span></td>\n" +
@@ -38,7 +38,7 @@ public class ShipSensors extends Component {
                 "            <td colspan='1'><span class='sensor_span' title='LADAR Sensor Strength'><img src='" + ResourceLocation.iconOfIconID(attributeMap.get(209).iconID, dataSupplier) + "' height='32px' width='32px'>" + dataSupplier.unitify(attributeValueMap.getOrDefault(new Tuple2<>(type.typeID, 209), 0.0), attributeMap.get(209).unitID) + "</span></td>\n" +
                 "        </tr>\n" +
                 "    </table>\n" +
-                "</DIV>";
+                "</div>";
     }
 
     @Override

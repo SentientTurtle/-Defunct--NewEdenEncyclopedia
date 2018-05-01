@@ -25,7 +25,7 @@ public abstract class ShipResists extends Component {
     @Language("HTML")
     protected String buildHTML(DataSupplier dataSupplier) {
         @Language("HTML")
-        String html = "<DIV class='component ship_resists text_font'>\n" +
+        String html = "<div class='component ship_resists text_font'>\n" +
                 "    <B class='headFont ship_resists_title head_font'>" + getType() + "</B>\n" +
                 "    <table class='resists_table'>\n" +
                 "        <tr>\n" +

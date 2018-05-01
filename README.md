@@ -23,7 +23,7 @@ The New Eden Encyclopedia project is a set of tools to automatically generate wi
 This project is used to experiment with various language features, notably Java 8 streams.
 As result, very little concern has been taken for the memory footprint, and page generation speed.
 
-Additionally, the project has been heavily refactored and partially rewritten, leaving large parts of the code without explicit documentation.
+Additionally, the project has been heavily refactored and partially rewritten, leaving large parts of the code with minimal documentation.
 
 ## License
 

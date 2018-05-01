@@ -22,7 +22,7 @@ public class ShipCapacitor extends Component {
     public String buildHTML(DataSupplier dataSupplier) {
         Map<Integer, Attribute> attributeMap = dataSupplier.getAttributes();
         Map<Tuple2<Integer, Integer>, Double> attributeValueMap = dataSupplier.getAttributeValues();
-        return "<DIV class='component ship_capacitor text_font'>\n" +
+        return "<div class='component ship_capacitor text_font'>\n" +
                 "    <table class='capacitor_table'>\n" +
                 "        <tr>\n" +
                 "            <td><span class='capacitor_span' title='Capacitor Capacity'><img src='" + ResourceLocation.iconOfIconID(attributeMap.get(482).iconID, dataSupplier) + "' height='32px' width='32px'>Capacitor Capacity: " + dataSupplier.unitify(attributeValueMap.get(new Tuple2<>(type.typeID, 482)), attributeMap.get(482).unitID) + "</span>\n" +
@@ -31,7 +31,7 @@ public class ShipCapacitor extends Component {
                 "            </td>\n" +
                 "        </tr>\n" +
                 "    </table>\n" +
-                "</DIV>";
+                "</div>";
     }
 
     @Override
