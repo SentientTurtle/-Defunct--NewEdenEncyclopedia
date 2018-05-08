@@ -1,10 +1,11 @@
 package net.sentientturtle.nee.components;
 
+import net.sentientturtle.nee.pages.Page;
 import net.sentientturtle.nee.util.PageReference;
 import net.sentientturtle.nee.data.DataSupplier;
 import net.sentientturtle.nee.orm.Type;
 import net.sentientturtle.nee.pages.PageType;
-import net.sentientturtle.nee.util.Tuple3;
+import net.sentientturtle.util.tuple.Tuple3;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,12 +20,13 @@ public class TypeTraits extends Component {
     private static Pattern showInfoHref = Pattern.compile("<a href=showinfo:(\\d+?)>(.+?)</a>");
     private final Type type;
 
-    public TypeTraits(Type type) {
+    public TypeTraits(Type type, DataSupplier dataSupplier, Page page) {
+        super(dataSupplier, page);
         this.type = type;
     }
 
     @Override
-    public String buildHTML(DataSupplier dataSupplier) {   // Called lazily, hence the large amount of computation in this method
+    public String buildHTML() {   // Called lazily, hence the large amount of computation in this method
         boolean first = true;
         //language=HTML
         StringBuilder traitString = new StringBuilder("<div class='component type_traits text_font'><table class='trait_table'>");
@@ -42,7 +44,7 @@ public class TypeTraits extends Component {
             } else if (skillID == -2) {
                 traitString.append("<tr class='head_font'><th class='trait_table_head' colspan='2'>Misc Bonus</th></tr>");
             } else {
-                traitString.append("<tr class='head_font'><th class='trait_table_head' colspan='2'>").append(new PageReference(dataSupplier.getTypes().get(skillID).name, PageType.TYPE)).append(" bonuses (per skill level)</th></tr>");
+                traitString.append("<tr class='head_font'><th class='trait_table_head' colspan='2'>").append(new PageReference(dataSupplier.getTypes().get(skillID).name, PageType.TYPE, page.getPageType().getFolderDepth())).append(" bonuses (per skill level)</th></tr>");
             }
 
             if (skillID == -2 && type.groupID == 1305) {
@@ -85,9 +87,9 @@ public class TypeTraits extends Component {
         Matcher matcher = showInfoHref.matcher(bonusText);
         while (matcher.find()) {
             String typeID = matcher.group(1);
-            bonusText = bonusText.replace("<a href=showinfo:" + typeID + ">" + matcher.group(2) + "</a>", new PageReference(dataSupplier.getTypes().get(Integer.valueOf(typeID)).name, PageType.TYPE, matcher.group(2)).toString());
+            bonusText = bonusText.replace("<a href=showinfo:" + typeID + ">" + matcher.group(2) + "</a>", new PageReference(dataSupplier.getTypes().get(Integer.valueOf(typeID)).name, PageType.TYPE, matcher.group(2), page.getPageType().getFolderDepth()).toString());
         }
-        traitString.append("<tr><td class='trait_data'>").append(traitTuple.v1 != 0 ? dataSupplier.unitify(traitTuple.v1, traitTuple.v3) : "").append("</td><td class='trait_data'>").append(bonusText).append("</td>");
+        traitString.append("<tr><td class='trait_data'>").append(traitTuple.v1 != 0 ? dataSupplier.unitify(traitTuple.v1, traitTuple.v3, page) : "").append("</td><td class='trait_data'>").append(bonusText).append("</td>");
     }
 
     @Override

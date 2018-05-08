@@ -1,5 +1,6 @@
 package net.sentientturtle.nee.components;
 
+import net.sentientturtle.nee.pages.Page;
 import net.sentientturtle.nee.util.PageReference;
 import net.sentientturtle.nee.util.ResourceLocation;
 import net.sentientturtle.nee.data.DataSupplier;
@@ -17,12 +18,13 @@ import java.util.Set;
 public class IndustryIO extends Component {
     private Type type;
 
-    public IndustryIO(Type type) {
+    public IndustryIO(Type type, DataSupplier dataSupplier, Page page) {
+        super(dataSupplier, page);
         this.type = type;
     }
 
     @Override
-    protected String buildHTML(DataSupplier dataSupplier) {
+    protected String buildHTML() {
         StringBuilder html = new StringBuilder();
         html.append("<div class='component industry_io'>");
         Set<IndustryActivity> industryActivities = dataSupplier.getBpActivityMap().get(type.typeID);
@@ -38,12 +40,12 @@ public class IndustryIO extends Component {
                 industryActivity.materialMap.entrySet().stream()
                         .sorted((o1, o2) -> o2.getValue().compareTo(o1.getValue())) // Sort in order of decreasing quantity
                         .forEach(entry -> html.append("<div class='io_item text_font '>")
-                                .append("<img src='").append(ResourceLocation.iconOfTypeID(entry.getKey(), dataSupplier)).append("' height='48' width='48'>")
+                                .append("<img src='").append(ResourceLocation.iconOfTypeID(entry.getKey(), dataSupplier, page)).append("' height='48' width='48'>")
                                 .append("<span class='io_item_text io_item_type'><b>")
-                                .append(new PageReference(dataSupplier.getTypes().get(entry.getKey()).name, PageType.TYPE))
+                                .append(new PageReference(dataSupplier.getTypes().get(entry.getKey()).name, PageType.TYPE, page.getPageType().getFolderDepth()))
                                 .append("</b></span>")
                                 .append("<span class='io_item_text'><b>")
-                                .append(dataSupplier.unitify(entry.getValue(), -1)) // Unitify without unit
+                                .append(dataSupplier.unitify(entry.getValue(), -1, page)) // Unitify without unit
                                 .append("</b>")
                                 .append("</div>")
                         );
@@ -55,12 +57,12 @@ public class IndustryIO extends Component {
                 industryActivity.productMap.entrySet().stream()
                         .sorted((o1, o2) -> o2.getValue().compareTo(o1.getValue())) // Sort in order of decreasing quantity
                         .forEach(entry -> html.append("<div class='io_item text_font '>")
-                                .append("<img src='").append(ResourceLocation.iconOfTypeID(entry.getKey(), dataSupplier)).append("' height='48' width='48'>")
+                                .append("<img src='").append(ResourceLocation.iconOfTypeID(entry.getKey(), dataSupplier, page)).append("' height='48' width='48'>")
                                 .append("<span class='io_item_text io_item_type'><b>")
-                                .append(new PageReference(dataSupplier.getTypes().get(entry.getKey()).name, PageType.TYPE))
+                                .append(new PageReference(dataSupplier.getTypes().get(entry.getKey()).name, PageType.TYPE, page.getPageType().getFolderDepth()))
                                 .append("</b></span>")
                                 .append("<span class='io_item_text'><b>")
-                                .append(dataSupplier.unitify(entry.getValue(), -1)) // Unitify without unit
+                                .append(dataSupplier.unitify(entry.getValue(), -1, page)) // Unitify without unit
                                 .append("</b>")
                                 .append("</div>")
                         );
@@ -72,12 +74,12 @@ public class IndustryIO extends Component {
                 industryActivity.skillMap.entrySet().stream()
                         .sorted((o1, o2) -> o2.getValue().compareTo(o1.getValue())) // Sort in order of decreasing level
                         .forEach(entry -> html.append("<div class='io_item text_font '>")
-                                .append("<img src='").append(ResourceLocation.iconOfTypeID(entry.getKey(), dataSupplier)).append("' height='32' width='32'>")
+                                .append("<img src='").append(ResourceLocation.iconOfTypeID(entry.getKey(), dataSupplier, page)).append("' height='32' width='32'>")
                                 .append("<span class='io_item_text io_item_type'><b>")
-                                .append(new PageReference(dataSupplier.getTypes().get(entry.getKey()).name, PageType.TYPE))
+                                .append(new PageReference(dataSupplier.getTypes().get(entry.getKey()).name, PageType.TYPE, page.getPageType().getFolderDepth()))
                                 .append("</b></span>")
                                 .append("<span class='io_item_text'><b>")
-                                .append(dataSupplier.unitify(entry.getValue(), -1)) // Unitify without unit
+                                .append(dataSupplier.unitify(entry.getValue(), -1, page)) // Unitify without unit
                                 .append("</b>")
                                 .append("</div>")
                         );

@@ -1,11 +1,12 @@
 package net.sentientturtle.nee.components;
 
+import net.sentientturtle.nee.pages.Page;
 import net.sentientturtle.nee.util.PageReference;
 import net.sentientturtle.nee.util.ResourceLocation;
 import net.sentientturtle.nee.data.DataSupplier;
 import net.sentientturtle.nee.orm.Type;
 import net.sentientturtle.nee.pages.PageType;
-import net.sentientturtle.nee.util.Tuple2;
+import net.sentientturtle.util.tuple.Tuple2;
 
 /**
  * Lists the variants of a {@link Type}
@@ -13,12 +14,13 @@ import net.sentientturtle.nee.util.Tuple2;
 public class TypeVariants extends Component {
     private final Type type;
 
-    public TypeVariants(Type type) {
+    public TypeVariants(Type type, DataSupplier dataSupplier, Page page) {
+        super(dataSupplier, page);
         this.type = type;
     }
 
     @Override
-    protected String buildHTML(DataSupplier dataSupplier) {
+    protected String buildHTML() {
         StringBuilder html = new StringBuilder();
         html.append("<div class='component type_variants text_font'>" +
                 "<span class='type_variants_title head_font'>Variants</span>" +
@@ -27,9 +29,9 @@ public class TypeVariants extends Component {
         for (int typeID : dataSupplier.getMetaTypes().get(parentTypeID)) {
             if (typeID != type.typeID) {
                 html.append("<tr><td class='type_variants_td'>")
-                        .append("<img src='").append(ResourceLocation.iconOfTypeID(typeID, dataSupplier)).append("' height='64px' width='64px'>")
+                        .append("<img src='").append(ResourceLocation.iconOfTypeID(typeID, dataSupplier, page)).append("' height='64px' width='64px'>")
                         .append("</td><td class='head_font type_variants_td'><span class='type_variants_type'>")
-                        .append(new PageReference(dataSupplier.getTypes().get(typeID).name, PageType.TYPE))
+                        .append(new PageReference(dataSupplier.getTypes().get(typeID).name, PageType.TYPE, page.getPageType().getFolderDepth()))
                         .append("</span></td></tr>");
             }
         }

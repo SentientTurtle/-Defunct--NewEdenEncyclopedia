@@ -2,7 +2,7 @@ package net.sentientturtle.nee.util;
 
 import net.sentientturtle.nee.data.DataSupplier;
 import net.sentientturtle.nee.orm.Mappable;
-import net.sentientturtle.nee.util.Tuple2;
+import net.sentientturtle.util.tuple.Tuple2;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -25,9 +25,10 @@ public class MapRenderer {
     private static final int STAR_SIZE = 32;
 
 
+    @SuppressWarnings("WeakerAccess")
     public static byte[] render(Mappable mappable, DataSupplier dataSupplier) {
         HashMap<Integer, Mappable> points = mappable.getMapPoints(dataSupplier)
-                .map((Function<Mappable, Tuple2<Integer, Mappable>>) mappable1 -> new Tuple2<>(mappable1.getID(), mappable1))
+                .map((Function<Mappable, Tuple2<Integer, Mappable>>) point -> new Tuple2<>(point.getID(), point))
                 .collect(Tuple2.collectToMap());
 
         double miniX = Double.MAX_VALUE;

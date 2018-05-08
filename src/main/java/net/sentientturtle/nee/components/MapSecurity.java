@@ -2,6 +2,7 @@ package net.sentientturtle.nee.components;
 
 import net.sentientturtle.nee.data.DataSupplier;
 import net.sentientturtle.nee.orm.Mappable;
+import net.sentientturtle.nee.pages.Page;
 import net.sentientturtle.nee.util.MapRenderer;
 
 import java.util.OptionalDouble;
@@ -12,12 +13,13 @@ import java.util.OptionalDouble;
 public class MapSecurity extends Component {
     private Mappable mappable;
 
-    public MapSecurity(Mappable mappable) {
+    public MapSecurity(Mappable mappable, DataSupplier dataSupplier, Page page) {
+        super(dataSupplier, page);
         this.mappable = mappable;
     }
 
     @Override
-    protected String buildHTML(DataSupplier dataSupplier) {
+    protected String buildHTML() {
         OptionalDouble security = mappable.getSecurity(dataSupplier);
         assert security.isPresent();
         int color = (int) Math.max(0, Math.round(security.getAsDouble()*10));

@@ -1,10 +1,11 @@
 package net.sentientturtle.nee.orm.singleton;
 
+import net.sentientturtle.nee.pages.Page;
 import net.sentientturtle.nee.util.ResourceLocation;
 import net.sentientturtle.nee.data.DataSupplier;
 import net.sentientturtle.nee.orm.Mappable;
 import net.sentientturtle.nee.orm.SolarSystem;
-import net.sentientturtle.nee.util.Tuple2;
+import net.sentientturtle.util.tuple.Tuple2;
 
 import java.util.OptionalDouble;
 import java.util.OptionalInt;
@@ -13,11 +14,11 @@ import java.util.stream.Stream;
 /**
  * Contains singleton {@link Mappable} instances for the two star clusters in EVE Online
  */
-public class Cluster {
+public interface Cluster extends Mappable {
     /**
      * Singleton representing the "New Eden Cluster", also known as "Known Space"
      */
-    public static final Mappable K_SPACE = new Mappable() {
+    Mappable K_SPACE = new Cluster() {
         @Override
         public int getID() {
             return -1;
@@ -80,15 +81,15 @@ public class Cluster {
         }
 
         @Override
-        public ResourceLocation getIcon(DataSupplier dataSupplier) {
-            return new ResourceLocation("7_64_4.png", ResourceLocation.Type.ITEM_ICON, dataSupplier);
+        public ResourceLocation getIcon(DataSupplier dataSupplier, Page page) {
+            return new ResourceLocation("7_64_4.png", ResourceLocation.Type.ITEM_ICON, dataSupplier, page);
         }
     };
 
     /**
      * Singleton representing the "Anoikis" cluster, also known as "Wormhole Space" or "Unknown Space"
      */
-    public static final Mappable W_SPACE = new Mappable() {
+    Mappable W_SPACE = new Cluster() {
         @Override
         public int getID() {
             return -2;
@@ -150,8 +151,8 @@ public class Cluster {
         }
 
         @Override
-        public ResourceLocation getIcon(DataSupplier dataSupplier) {
-            return new ResourceLocation("7_64_4.png", ResourceLocation.Type.ITEM_ICON, dataSupplier);
+        public ResourceLocation getIcon(DataSupplier dataSupplier, Page page) {
+            return new ResourceLocation("7_64_4.png", ResourceLocation.Type.ITEM_ICON, dataSupplier, page);
         }
     };
 }

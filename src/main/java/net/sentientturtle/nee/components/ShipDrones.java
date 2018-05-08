@@ -1,10 +1,11 @@
 package net.sentientturtle.nee.components;
 
+import net.sentientturtle.nee.pages.Page;
 import net.sentientturtle.nee.util.ResourceLocation;
 import net.sentientturtle.nee.data.DataSupplier;
 import net.sentientturtle.nee.orm.Attribute;
 import net.sentientturtle.nee.orm.Type;
-import net.sentientturtle.nee.util.Tuple2;
+import net.sentientturtle.util.tuple.Tuple2;
 
 import java.util.Map;
 
@@ -14,12 +15,13 @@ import java.util.Map;
 public class ShipDrones extends Component {
     private final Type type;
 
-    public ShipDrones(Type type) {
+    public ShipDrones(Type type, DataSupplier dataSupplier, Page page) {
+        super(dataSupplier, page);
         this.type = type;
     }
 
     @Override
-    public String buildHTML(DataSupplier dataSupplier) {
+    public String buildHTML() {
         Map<Integer, Attribute> attributeMap = dataSupplier.getAttributes();
         Map<Tuple2<Integer, Integer>, Double> attributeValueMap = dataSupplier.getAttributeValues();
 
@@ -27,10 +29,10 @@ public class ShipDrones extends Component {
                 "    <table class='drone_table'>\n" +
                 "        <tr>\n" +
                 "            <td>\n" +
-                "                <span class='drone_span' title='Drone Capacity'><img src='" + ResourceLocation.iconOfIconID(attributeMap.get(283).iconID, dataSupplier) + "' height='32px' width='32px'>Drone Capacity: " + dataSupplier.unitify(attributeValueMap.get(new Tuple2<>(type.typeID, 283)), attributeMap.get(283).unitID) + "</span>\n" +
+                "                <span class='drone_span' title='Drone Capacity'><img src='" + ResourceLocation.iconOfIconID(attributeMap.get(283).iconID, dataSupplier, page) + "' height='32px' width='32px'>Drone Capacity: " + dataSupplier.unitify(attributeValueMap.get(new Tuple2<>(type.typeID, 283)), attributeMap.get(283).unitID, page) + "</span>\n" +
                 "            </td>\n" +
                 "            <td class='drone_bandwidth'>\n" +
-                "                <span class='drone_span' title='Drone Bandwidth'><img src='" + ResourceLocation.iconOfIconID(attributeMap.get(1271).iconID, dataSupplier) + "' height='32px' width='32px'>Drone Bandwidth: " + dataSupplier.unitify(attributeValueMap.get(new Tuple2<>(type.typeID, 1271)), attributeMap.get(1271).unitID) + "</span>\n" +
+                "                <span class='drone_span' title='Drone Bandwidth'><img src='" + ResourceLocation.iconOfIconID(attributeMap.get(1271).iconID, dataSupplier, page) + "' height='32px' width='32px'>Drone Bandwidth: " + dataSupplier.unitify(attributeValueMap.get(new Tuple2<>(type.typeID, 1271)), attributeMap.get(1271).unitID, page) + "</span>\n" +
                 "            </td>\n" +
                 "        </tr>\n" +
                 "    </table>\n" +
@@ -40,16 +42,17 @@ public class ShipDrones extends Component {
     @Override
     public String buildCSS() {
         return ".drone_table {\n" +
-                "  width: 100%;\n" +
+                "    width: 100%;\n" +
+                "    margin: 5px;\n" +
                 "}\n" +
                 "\n" +
                 ".drone_span {\n" +
-                "  display: flex;\n" +
-                "  align-items: center;\n" +
+                "    display: flex;\n" +
+                "    align-items: center;\n" +
                 "}\n" +
                 "\n" +
                 ".drone_bandwidth {\n" +
-                "  width: 46%;\n" +
+                "    width: 46%;\n" +
                 "}";
     }
 }

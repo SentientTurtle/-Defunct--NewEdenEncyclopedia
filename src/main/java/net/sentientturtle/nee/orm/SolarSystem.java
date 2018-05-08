@@ -1,8 +1,9 @@
 package net.sentientturtle.nee.orm;
 
+import net.sentientturtle.nee.pages.Page;
 import net.sentientturtle.nee.util.ResourceLocation;
 import net.sentientturtle.nee.data.DataSupplier;
-import net.sentientturtle.nee.util.Tuple2;
+import net.sentientturtle.util.tuple.Tuple2;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.OptionalDouble;
@@ -13,6 +14,7 @@ import java.util.stream.Stream;
  * Data object representing EVE Online SolarSystems
  * (The name 'SolarSystem' was chosen as EVE Online APIs use the term 'SolarSystem', rather than the more accurate 'Planetary system')
  */
+@SuppressWarnings("WeakerAccess")
 public class SolarSystem implements Mappable {
     public final int regionID;
     public final int constellationID;
@@ -102,7 +104,7 @@ public class SolarSystem implements Mappable {
     }
 
     @Override
-    public ResourceLocation getIcon(DataSupplier dataSupplier) {
-        return ResourceLocation.iconOfTypeID(sunTypeID, dataSupplier);
+    public ResourceLocation getIcon(DataSupplier dataSupplier, Page page) {
+        return ResourceLocation.iconOfTypeID(sunTypeID, dataSupplier, page);
     }
 }

@@ -1,10 +1,11 @@
 package net.sentientturtle.nee.components;
 
+import net.sentientturtle.nee.pages.Page;
 import net.sentientturtle.nee.util.ResourceLocation;
 import net.sentientturtle.nee.data.DataSupplier;
 import net.sentientturtle.nee.orm.Attribute;
 import net.sentientturtle.nee.orm.Type;
-import net.sentientturtle.nee.util.Tuple2;
+import net.sentientturtle.util.tuple.Tuple2;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -17,12 +18,13 @@ import java.util.Set;
 public class TypeAttributes extends Component {
     private Type type;
 
-    public TypeAttributes(Type type) {
+    public TypeAttributes(Type type, DataSupplier dataSupplier, Page page) {
+        super(dataSupplier, page);
         this.type = type;
     }
 
     @Override
-    protected String buildHTML(DataSupplier dataSupplier) {
+    protected String buildHTML() {
         assert dataSupplier.getTypeAttributes().containsKey(type.typeID);
         StringBuilder html = new StringBuilder();
 
@@ -38,7 +40,6 @@ public class TypeAttributes extends Component {
                 .sorted()   // Attribute ordering required
                 .map(attributeMap::get)
                 .filter(attribute -> attribute.published)
-//                 TODO: Might need to filter for attributes having icons? (Remember to remove attribute icon branch below)
                 .forEach(attribute -> attributeValues.put(attribute, attributeValueMap.get(new Tuple2<>(type.typeID, attribute.attributeID))));
 
         html.append("<div class='component item_attributes text_font'><table class='attribute_table'>");
@@ -46,12 +47,12 @@ public class TypeAttributes extends Component {
         attributeValues.forEach((attribute, value) -> {
             html.append("<tr>");
             if (attribute.iconID != 0) {
-                html.append("<td class='attribute_table_data attribute_table_icon'><img src='").append(ResourceLocation.iconOfIconID(attribute.iconID, dataSupplier)).append("' height='32px' width='32px'></td>");
+                html.append("<td class='attribute_table_data attribute_table_icon'><img src='").append(ResourceLocation.iconOfIconID(attribute.iconID, dataSupplier, page)).append("' height='32px' width='32px'></td>");
             } else {
                 html.append("<td class='attribute_table_data attribute_table_icon'></td>");
             }
             html.append("<td class='attribute_table_data'><span>").append(attribute.displayName == null ? attribute.attributeName : attribute.displayName).append("</span></td>")
-                    .append("<td class='attribute_table_data'><span>").append(dataSupplier.unitify(value, attribute.unitID)).append("</span></td>")
+                    .append("<td class='attribute_table_data'><span>").append(dataSupplier.unitify(value, attribute.unitID, page)).append("</span></td>")
                     .append("</tr>");
         });
 

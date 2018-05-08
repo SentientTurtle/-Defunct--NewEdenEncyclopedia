@@ -1,10 +1,11 @@
 package net.sentientturtle.nee.data;
 
+import net.sentientturtle.nee.pages.Page;
 import net.sentientturtle.nee.util.PageReference;
 import net.sentientturtle.nee.orm.*;
 import net.sentientturtle.nee.pages.PageType;
-import net.sentientturtle.nee.util.Tuple2;
-import net.sentientturtle.nee.util.Tuple3;
+import net.sentientturtle.util.tuple.Tuple2;
+import net.sentientturtle.util.tuple.Tuple3;
 
 import java.lang.reflect.Field;
 import java.text.DecimalFormat;
@@ -98,9 +99,10 @@ public abstract class DataSupplier {
      * Formats a double value into a String with a given unit
      * @param value Value to format
      * @param unitID UnitID of the unit to format the value with
+     * @param page Page that the formatted text will be displayed on; Used to format references to other pages (Type/Group/etc units)
      * @return Value formatted as a String with the specified unit
      */
-    public String unitify(double value, int unitID) {
+    public String unitify(double value, int unitID, Page page) {
         DecimalFormat decimalFormat = DataSupplier.threadLocalDecimalFormat.get();
         Map<Integer, String> unitMap = getUnitStrings();
         Map<Integer, Type> typeMap = getTypes();
@@ -149,7 +151,7 @@ public abstract class DataSupplier {
                 return unitMap.get(unitID) + " " + decimalFormat.format(value);
             case 116:   // "typeID"	"typeID"
                 if (typeMap.containsKey((int) value)) {
-                    return new PageReference(typeMap.get((int) value).name, PageType.TYPE).toString();
+                    return new PageReference(typeMap.get((int) value).name, PageType.TYPE, page.getPageType().getFolderDepth()).toString();
                 } else {
                     System.err.println("UNKNOWN ITEM: " + value);
                     return "[UNKNOWN ITEM:" + (int) value + "]";
@@ -208,6 +210,7 @@ public abstract class DataSupplier {
     /**
      * Class with some utility methods to patch errors and undesired values in EVE Online data.
      */
+    @SuppressWarnings("WeakerAccess")
     public static class Patcher {
         private static final boolean PATCHER_VERBOSE_LOG = false;   // Debug option for logging of patched data
 

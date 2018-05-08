@@ -24,7 +24,7 @@ public class GrannyParser {
     public static void main(String[] args) throws IOException {
         System.setProperty("sqlite4java.library.path", "native");
         SQLiteQueue sqLiteQueue = new SQLiteQueue(new File("rsc/sqlite-latest.sqlite")).start();
-        getModels(sqLiteQueue, Main.converterExecutable, new File(Main.modelSourceFolder), new File(Main.modelOutputFolder));
+        getModels(sqLiteQueue, Main.CONVERTER_EXECUTABLE, new File(Main.MODEL_SOURCE_FOLDER), new File(Main.MODEL_OUTPUT_FOLDER));
         sqLiteQueue.stop(true);
     }
 
@@ -113,7 +113,7 @@ public class GrannyParser {
         SQLiteQueue outDB = new SQLiteQueue().start();
         outDB.execute(new SQLiteJob<Void>() {
             @Override
-            protected Void job(SQLiteConnection connection) throws Throwable {
+            protected Void job(SQLiteConnection connection) {
                 try {
                     connection.exec("CREATE TABLE IF NOT EXISTS `invSizes` (\n" +
                             "  `typeID`\tINTEGER NOT NULL,\n" +
@@ -150,11 +150,11 @@ public class GrannyParser {
             }
         }).complete();
 
-        FileUtils.deleteQuietly(new File(Main.grannySqlite));
+        FileUtils.deleteQuietly(new File(Main.GRANNY_SQLITE));
         outDB.execute(new SQLiteJob<Void>() {
             @Override
             protected Void job(SQLiteConnection connection) throws Throwable {
-                SQLiteBackup backup = connection.initializeBackup(new File(Main.grannySqlite));
+                SQLiteBackup backup = connection.initializeBackup(new File(Main.GRANNY_SQLITE));
                 try {
                     while (!backup.isFinished()) {
                         backup.backupStep(32);
@@ -224,6 +224,7 @@ public class GrannyParser {
     }
 
 
+    @SuppressWarnings("WeakerAccess")
     private final static class Vector3 {
         public final double x;
         public final double y;

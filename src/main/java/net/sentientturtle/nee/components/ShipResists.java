@@ -1,10 +1,11 @@
 package net.sentientturtle.nee.components;
 
+import net.sentientturtle.nee.pages.Page;
 import net.sentientturtle.nee.util.ResourceLocation;
 import net.sentientturtle.nee.data.DataSupplier;
 import net.sentientturtle.nee.orm.Type;
-import net.sentientturtle.nee.util.Tuple2;
-import net.sentientturtle.nee.util.Tuple4;
+import net.sentientturtle.util.tuple.Tuple2;
+import net.sentientturtle.util.tuple.Tuple4;
 import org.intellij.lang.annotations.Language;
 
 /**
@@ -17,40 +18,41 @@ import org.intellij.lang.annotations.Language;
 public abstract class ShipResists extends Component {
     protected Type type;
 
-    public ShipResists(Type type) {
+    ShipResists(Type type, DataSupplier dataSupplier, Page page) {
+        super(dataSupplier, page);
         this.type = type;
     }
 
     @Override
     @Language("HTML")
-    protected String buildHTML(DataSupplier dataSupplier) {
+    protected String buildHTML() {
         @Language("HTML")
         String html = "<div class='component ship_resists text_font'>\n" +
                 "    <B class='headFont ship_resists_title head_font'>" + getType() + "</B>\n" +
                 "    <table class='resists_table'>\n" +
                 "        <tr>\n" +
-                "            <td class='resists_icon_td'><img src='" + ResourceLocation.iconOfIconID(dataSupplier.getAttributes().get(getHpAttribute()).iconID, dataSupplier) + "' height='32px' width='32px'></td>\n" +
+                "            <td class='resists_icon_td'><img src='" + ResourceLocation.iconOfIconID(dataSupplier.getAttributes().get(getHpAttribute()).iconID, dataSupplier, page) + "' height='32px' width='32px'></td>\n" +
                 "            <td>" + getType() + " Hitpoints: " + getHp(dataSupplier, getHpAttribute()) + "</td>\n" +
                 "            <td></td>\n" +
                 "        </tr>";
         if (getRechargeText(dataSupplier) != null) {
             html += "<tr>\n" +
-                    "    <td class='resists_icon_td'><img src='" + new ResourceLocation("22_32_16.png", ResourceLocation.Type.ITEM_ICON, dataSupplier) + "' height='32px' width='32px'></td><td>" + getRechargeText(dataSupplier) + "</td><td></td>\n" +
+                    "    <td class='resists_icon_td'><img src='" + new ResourceLocation("22_32_16.png", ResourceLocation.Type.ITEM_ICON, dataSupplier, page) + "' height='32px' width='32px'></td><td>" + getRechargeText(dataSupplier) + "</td><td></td>\n" +
                     "</tr>";
         }
         Tuple4<Double, Double, Double, Double> resistTuple = getResists(dataSupplier);
         if (resistTuple != null && (resistTuple.v1 != 0 || resistTuple.v2 != 0 || resistTuple.v3 != 0 || resistTuple.v4 != 0)) {
             html += "<tr title='Electromagnetic Damage Resistance'>\n" +
-                    "    <td class='resists_icon_td'><img src='" + new ResourceLocation("22_32_12.png", ResourceLocation.Type.ITEM_ICON, dataSupplier) + "' height='32px' width='32px'></td><td class='resists_bar_td'><progress class='resist_bar em_resists' value=" + (1 - resistTuple.v1) + "></progress></td><td class='resists_text_td'>" + dataSupplier.unitify(resistTuple.v1, dataSupplier.getAttributes().get(267).unitID) + "</td>\n" +
+                    "    <td class='resists_icon_td'><img src='" + new ResourceLocation("22_32_12.png", ResourceLocation.Type.ITEM_ICON, dataSupplier, page) + "' height='32px' width='32px'></td><td class='resists_bar_td'><progress class='resist_bar em_resists' value=" + (1 - resistTuple.v1) + "></progress></td><td class='resists_text_td'>" + dataSupplier.unitify(resistTuple.v1, dataSupplier.getAttributes().get(267).unitID, page) + "</td>\n" +
                     "</tr>\n" +
                     "<tr title='Thermal Damage Resistance'>\n" +
-                    "    <td class='resists_icon_td'><img src='" + new ResourceLocation("22_32_10.png", ResourceLocation.Type.ITEM_ICON, dataSupplier) + "' height='32px' width='32px'></td><td class='resists_bar_td'><progress class='resist_bar th_resists' value=" + (1 - resistTuple.v2) + "></progress></td><td class='resists_text_td'>" + dataSupplier.unitify(resistTuple.v2, dataSupplier.getAttributes().get(270).unitID) + "</td>\n" +
+                    "    <td class='resists_icon_td'><img src='" + new ResourceLocation("22_32_10.png", ResourceLocation.Type.ITEM_ICON, dataSupplier, page) + "' height='32px' width='32px'></td><td class='resists_bar_td'><progress class='resist_bar th_resists' value=" + (1 - resistTuple.v2) + "></progress></td><td class='resists_text_td'>" + dataSupplier.unitify(resistTuple.v2, dataSupplier.getAttributes().get(270).unitID, page) + "</td>\n" +
                     "</tr>\n" +
                     "<tr title='Kinetic Damage Resistance'>\n" +
-                    "    <td class='resists_icon_td'><img src='" + new ResourceLocation("22_32_9.png", ResourceLocation.Type.ITEM_ICON, dataSupplier) + "' height='32px' width='32px'></td><td class='resists_bar_td'><progress class='resist_bar ki_resists' value=" + (1 - resistTuple.v3) + "></progress></td><td class='resists_text_td'>" + dataSupplier.unitify(resistTuple.v3, dataSupplier.getAttributes().get(269).unitID) + "</td>\n" +
+                    "    <td class='resists_icon_td'><img src='" + new ResourceLocation("22_32_9.png", ResourceLocation.Type.ITEM_ICON, dataSupplier, page) + "' height='32px' width='32px'></td><td class='resists_bar_td'><progress class='resist_bar ki_resists' value=" + (1 - resistTuple.v3) + "></progress></td><td class='resists_text_td'>" + dataSupplier.unitify(resistTuple.v3, dataSupplier.getAttributes().get(269).unitID, page) + "</td>\n" +
                     "</tr>\n" +
                     "<tr title='Explosive Damage Resistance'>\n" +
-                    "    <td class='resists_icon_td'><img src='" + new ResourceLocation("22_32_11.png", ResourceLocation.Type.ITEM_ICON, dataSupplier) + "' height='32px' width='32px'></td><td class='resists_bar_td'><progress class='resist_bar ex_resists' value=" + (1 - resistTuple.v4) + "></progress></td><td class='resists_text_td'>" + dataSupplier.unitify(resistTuple.v4, dataSupplier.getAttributes().get(268).unitID) + "</td>\n" +
+                    "    <td class='resists_icon_td'><img src='" + new ResourceLocation("22_32_11.png", ResourceLocation.Type.ITEM_ICON, dataSupplier, page) + "' height='32px' width='32px'></td><td class='resists_bar_td'><progress class='resist_bar ex_resists' value=" + (1 - resistTuple.v4) + "></progress></td><td class='resists_text_td'>" + dataSupplier.unitify(resistTuple.v4, dataSupplier.getAttributes().get(268).unitID, page) + "</td>\n" +
                     "</tr>";
         }
         html += "</table></div>";
@@ -83,7 +85,7 @@ public abstract class ShipResists extends Component {
 
     // Helper method for fetching hitpoints string
     private String getHp(DataSupplier dataSupplier, int hpAttributeID) {
-        return dataSupplier.unitify(dataSupplier.getAttributeValues().get(new Tuple2<>(type.typeID, hpAttributeID)), dataSupplier.getAttributes().get(hpAttributeID).unitID);
+        return dataSupplier.unitify(dataSupplier.getAttributeValues().get(new Tuple2<>(type.typeID, hpAttributeID)), dataSupplier.getAttributes().get(hpAttributeID).unitID, page);
     }
 
 
@@ -96,6 +98,7 @@ public abstract class ShipResists extends Component {
      * @param exAttribute Explosive resistance attributeID
      * @see #getResists(DataSupplier)
      */
+    @SuppressWarnings("WeakerAccess")
     protected Tuple4<Double, Double, Double, Double> getResists(DataSupplier dataSupplier, int emAttribute, int thAttribute, int kiAttribute, int exAttribute) {
         return new Tuple4<>(
                 dataSupplier.getAttributeValues().getOrDefault(new Tuple2<>(type.typeID, emAttribute), 0.0),

@@ -2,7 +2,8 @@ package net.sentientturtle.nee.components;
 
 import net.sentientturtle.nee.data.DataSupplier;
 import net.sentientturtle.nee.orm.Type;
-import net.sentientturtle.nee.util.Tuple2;
+import net.sentientturtle.nee.pages.Page;
+import net.sentientturtle.util.tuple.Tuple2;
 
 import java.util.Map;
 
@@ -14,12 +15,13 @@ public class TypeSkills extends Component {
     private static final int[] skillAttributes = {182, 183, 184, 1285, 1289, 1290};
     private static final int[] levelAttributes = {277, 278, 279, 1286, 1287, 1288};
 
-    public TypeSkills(Type type) {
+    public TypeSkills(Type type, DataSupplier dataSupplier, Page page) {
+        super(dataSupplier, page);
         this.type = type;
     }
 
     @Override
-    protected String buildHTML(DataSupplier dataSupplier) {
+    protected String buildHTML() {
         StringBuilder html = new StringBuilder();
         html.append("<div class='component type_skills head_font'>" +
                 "<div class='type_skill_title'>Required skills</div>" +
@@ -57,7 +59,7 @@ public class TypeSkills extends Component {
                         levelString = "";
                         break;
                 }
-                html.append(dataSupplier.unitify(skill, 116)).append(levelString); // 116 = typeID unit
+                html.append(dataSupplier.unitify(skill, 116, page)).append(levelString); // 116 = typeID unit
                 if (attributeValues.containsKey(new Tuple2<>(skill.intValue(), 182))) {
                     fetchSkills(html, skill.intValue(), dataSupplier);
                 } else {

@@ -3,7 +3,8 @@ package net.sentientturtle.nee.components;
 import net.sentientturtle.nee.data.DataSupplier;
 import net.sentientturtle.nee.orm.Attribute;
 import net.sentientturtle.nee.orm.Type;
-import net.sentientturtle.nee.util.Tuple2;
+import net.sentientturtle.nee.pages.Page;
+import net.sentientturtle.util.tuple.Tuple2;
 
 import java.util.Map;
 
@@ -13,12 +14,13 @@ import java.util.Map;
 public class ShipCargo extends Component {
     private final Type type;
 
-    public ShipCargo(Type type) {
+    public ShipCargo(Type type, DataSupplier dataSupplier, Page page) {
+        super(dataSupplier, page);
         this.type = type;
     }
 
     @Override
-    public String buildHTML(DataSupplier dataSupplier) {
+    public String buildHTML() {
         StringBuilder builder = new StringBuilder("<div class='component ship_cargo text_font'>\n" +
                 "        <b class='head_font ship_cargo_title'>Cargo bays</b>\n" +
                 "        <br>\n" +
@@ -26,7 +28,7 @@ public class ShipCargo extends Component {
                 "        <table class='cargo_table'>");
         int length = builder.length();
         if (type.capacity > 0) {
-            builder.append("<tr><td>Cargo bay capacity</td><td>").append(dataSupplier.unitify(type.capacity, 9)).append("</td></tr>");
+            builder.append("<tr><td>Cargo bay capacity</td><td>").append(dataSupplier.unitify(type.capacity, 9, page)).append("</td></tr>");
         }
         Map<Integer, Attribute> attributeMap = dataSupplier.getAttributes();
         Map<Tuple2<Integer, Integer>, Double> attributeValueMap = dataSupplier.getAttributeValues();
@@ -37,7 +39,7 @@ public class ShipCargo extends Component {
                 .forEach(attribute -> {
                     Double value = attributeValueMap.get(new Tuple2<>(type.typeID, attribute.attributeID));
                     if (value != null) {
-                        builder.append("<tr><td>").append(attribute.displayName).append("</td><td>").append(dataSupplier.unitify(value, attribute.unitID)).append("</td></tr>");
+                        builder.append("<tr><td>").append(attribute.displayName).append("</td><td>").append(dataSupplier.unitify(value, attribute.unitID, page)).append("</td></tr>");
                     }
                 });
         if (builder.length() > length) {

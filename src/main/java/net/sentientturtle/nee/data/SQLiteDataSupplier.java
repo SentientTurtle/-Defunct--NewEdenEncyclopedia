@@ -5,6 +5,11 @@ import com.almworks.sqlite4java.SQLiteException;
 import com.almworks.sqlite4java.SQLiteStatement;
 import net.sentientturtle.nee.orm.*;
 import net.sentientturtle.nee.util.*;
+import net.sentientturtle.util.collections.LockableList;
+import net.sentientturtle.util.collections.LockableMap;
+import net.sentientturtle.util.collections.LockableSet;
+import net.sentientturtle.util.tuple.Tuple2;
+import net.sentientturtle.util.tuple.Tuple3;
 
 import java.io.File;
 import java.util.*;

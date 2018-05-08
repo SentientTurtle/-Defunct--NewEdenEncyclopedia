@@ -1,4 +1,4 @@
-package net.sentientturtle.nee.util;
+package net.sentientturtle.util.tuple;
 
 /**
  * 3 value tuple class

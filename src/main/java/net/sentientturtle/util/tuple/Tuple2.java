@@ -1,9 +1,8 @@
-package net.sentientturtle.nee.util;
+package net.sentientturtle.util.tuple;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
 
@@ -47,11 +46,13 @@ public class Tuple2<T1, T2> {
 
     /**
      * Maps {@link Map.Entry} objects to {@link Tuple2} objects
+     * Useful for making Entry-Streams immutable, at the cost of object thrashing.
      * @param entry Entry to map to a tuple
      * @param <T1> Type of {@link Tuple2#v1} / {@link Map.Entry#getKey()}
      * @param <T2> Type of {@link Tuple2#v2} / {@link Map.Entry#getValue()}
      * @return Tuple equivalent of the specified entry, where {@link Tuple2#v1} is the key of the entry, and {@link Tuple2#v2} is the value of the entry.
      */
+    @SuppressWarnings("WeakerAccess")
     public static <T1, T2> Tuple2<T1, T2> mapFromEntry(Map.Entry<T1, T2> entry) {
         return new Tuple2<>(entry.getKey(), entry.getValue());
     }

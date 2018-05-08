@@ -1,8 +1,9 @@
 package net.sentientturtle.nee.orm;
 
+import net.sentientturtle.nee.pages.Page;
 import net.sentientturtle.nee.util.ResourceLocation;
 import net.sentientturtle.nee.data.DataSupplier;
-import net.sentientturtle.nee.util.Tuple2;
+import net.sentientturtle.util.tuple.Tuple2;
 
 import java.util.OptionalDouble;
 import java.util.OptionalInt;
@@ -14,7 +15,7 @@ import java.util.stream.Stream;
 public interface Mappable {
     int getID();
     String getName();
-    ResourceLocation getIcon(DataSupplier dataSupplier);
+    ResourceLocation getIcon(DataSupplier dataSupplier, Page page);
 
     double getX();
     double getY();

@@ -1,5 +1,6 @@
 package net.sentientturtle.nee.components;
 
+import net.sentientturtle.nee.pages.Page;
 import net.sentientturtle.nee.util.PageReference;
 import net.sentientturtle.nee.util.ResourceLocation;
 import net.sentientturtle.nee.data.DataSupplier;
@@ -14,13 +15,14 @@ import net.sentientturtle.nee.pages.PageType;
 public class TypeGroup extends Component {
     private Type type;
 
-    public TypeGroup(Type type) {
+    public TypeGroup(Type type, DataSupplier dataSupplier, Page page) {
+        super(dataSupplier, page);
         this.type = type;
     }
 
     @SuppressWarnings("LanguageMismatch")
     @Override
-    public String buildHTML(DataSupplier dataSupplier) {
+    public String buildHTML() {
         Group group = dataSupplier.getGroups().get(type.groupID);
         Category category;
         if (group != null) {
@@ -33,14 +35,14 @@ public class TypeGroup extends Component {
         }
         return "<div class='component type_group head_font'><span class='type_group_span'>" +
                 "<img src='"
-                + (group.iconID != null ? ResourceLocation.iconOfIconID(group.iconID, dataSupplier) : new ResourceLocation("7_64_15.png", ResourceLocation.Type.ITEM_ICON, dataSupplier))
+                + (group.iconID != null ? ResourceLocation.iconOfIconID(group.iconID, dataSupplier, page) : new ResourceLocation("7_64_15.png", ResourceLocation.Type.ITEM_ICON, dataSupplier, page))
                 + "' height='48' width='48'>" +
-                "<b class='head_text type_group_text'>" + new PageReference(group.name, PageType.GROUP) + "</b>" +
+                "<b class='head_text type_group_text'>" + new PageReference(group.name, PageType.GROUP, page.getPageType().getFolderDepth()) + "</b>" +
                 "<span class='type_group_separator'>|</span>" +
                 "<img src='"
-                + (category.iconID != null ? ResourceLocation.iconOfIconID(category.iconID, dataSupplier) : new ResourceLocation("7_64_15.png", ResourceLocation.Type.ITEM_ICON, dataSupplier))
+                + (category.iconID != null ? ResourceLocation.iconOfIconID(category.iconID, dataSupplier, page) : new ResourceLocation("7_64_15.png", ResourceLocation.Type.ITEM_ICON, dataSupplier, page))
                 + "' height='48' width='48'>" +
-                "<b class='head_text type_category_text'>" + new PageReference(category.name, PageType.CATEGORY) + "</b>" +
+                "<b class='head_text type_category_text'>" + new PageReference(category.name, PageType.CATEGORY, page.getPageType().getFolderDepth()) + "</b>" +
                 "</span></div>";
     }
 

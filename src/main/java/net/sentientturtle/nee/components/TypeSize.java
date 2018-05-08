@@ -1,7 +1,8 @@
 package net.sentientturtle.nee.components;
 
 import net.sentientturtle.nee.data.DataSupplier;
-import net.sentientturtle.nee.util.Tuple3;
+import net.sentientturtle.nee.pages.Page;
+import net.sentientturtle.util.tuple.Tuple3;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -22,12 +23,13 @@ public class TypeSize extends Component {
         largeFormat = ThreadLocal.withInitial(() -> new DecimalFormat("#,###", symbols));
     }
 
-    public TypeSize(Tuple3<Double, Double, Double> sizeTuple) {
+    public TypeSize(Tuple3<Double, Double, Double> sizeTuple, DataSupplier dataSupplier, Page page) {
+        super(dataSupplier, page);
         this.sizeTuple = sizeTuple;
     }
 
     @Override
-    public String buildHTML(DataSupplier dataSupplier) {
+    public String buildHTML() {
         return "<div class='component type_size text_font'>\n" +
                 "    <span>Width: " + (sizeTuple.v1 < 100 ? smallFormat.get().format(sizeTuple.v1) : largeFormat.get().format(sizeTuple.v1)) + "m</span>\n" +
                 "    <span>Height: " + (sizeTuple.v2 < 100 ? smallFormat.get().format(sizeTuple.v2) : largeFormat.get().format(sizeTuple.v2)) + "m</span>\n" +

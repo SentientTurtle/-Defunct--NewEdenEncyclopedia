@@ -1,5 +1,6 @@
 package net.sentientturtle.nee.components;
 
+import net.sentientturtle.nee.pages.Page;
 import net.sentientturtle.nee.util.PageReference;
 import net.sentientturtle.nee.data.DataSupplier;
 import net.sentientturtle.nee.orm.Type;
@@ -16,12 +17,13 @@ public class TypeDescription extends Component {
     private static Pattern showInfoHref = Pattern.compile("<a href=showinfo:(\\d+?)>");
     private final Type type;
 
-    public TypeDescription(Type type) {
+    public TypeDescription(Type type, DataSupplier dataSupplier, Page page) {
+        super(dataSupplier, page);
         this.type = type;
     }
 
     @Override
-    public String buildHTML(DataSupplier dataSupplier) {   // Called lazily, hence the large amount of computation in this method
+    public String buildHTML() {   // Called lazily, hence the large amount of computation in this method
         @SuppressWarnings("LanguageMismatch")
         @Language("HTML")
         String descriptionText = type.description;
@@ -34,10 +36,10 @@ public class TypeDescription extends Component {
         matcher = showInfoHref.matcher(descriptionText);
         while (matcher.find()) {
             String typeID = matcher.group(1);
-            descriptionText = descriptionText.replace("<a href=showinfo:" + typeID + ">", new PageReference(dataSupplier.getTypes().get(Integer.valueOf(typeID)).name, PageType.TYPE).toString());
+            descriptionText = descriptionText.replace("<a href=showinfo:" + typeID + ">", new PageReference(dataSupplier.getTypes().get(Integer.valueOf(typeID)).name, PageType.TYPE, page.getPageType().getFolderDepth()).toString());
         }
         descriptionText = descriptionText
-                .replaceAll("<color='.*'>", "") // TODO: Should probably merge these into a single regex
+                .replaceAll("<color='.*'>", "")
                 .replaceAll("<font .*?=\".*\">", "")
                 .replaceAll("<a href=showinfo:\\d+?//\\d+?>", "") // Clear links with itemIDs
                 .replace("</color>", "")

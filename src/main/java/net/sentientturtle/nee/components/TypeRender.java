@@ -1,5 +1,6 @@
 package net.sentientturtle.nee.components;
 
+import net.sentientturtle.nee.pages.Page;
 import net.sentientturtle.nee.util.ResourceLocation;
 import net.sentientturtle.nee.data.DataSupplier;
 import net.sentientturtle.nee.orm.Type;
@@ -11,16 +12,18 @@ import net.sentientturtle.nee.orm.Type;
 public class TypeRender extends Component {
     private final ResourceLocation resourceLocation;
 
-    public TypeRender(Type type, DataSupplier dataSupplier) {
-        resourceLocation = new ResourceLocation(String.valueOf(type.typeID), ResourceLocation.Type.TYPE_RENDER_512, dataSupplier);
+    public TypeRender(Type type, DataSupplier dataSupplier, Page page) {
+        super(dataSupplier, page);
+        resourceLocation = new ResourceLocation(String.valueOf(type.typeID), ResourceLocation.Type.TYPE_RENDER_512, dataSupplier, page);
     }
 
-    public TypeRender(ResourceLocation resourceLocation) {
+    public TypeRender(ResourceLocation resourceLocation, DataSupplier dataSupplier, Page page) {
+        super(dataSupplier, page);
         this.resourceLocation = resourceLocation;
     }
 
     @Override
-    public String buildHTML(DataSupplier dataSupplier) {
+    public String buildHTML() {
         return "<div class='component type_render'>" +
                 "<img src='" + resourceLocation + "'>" +
                 "</div>";

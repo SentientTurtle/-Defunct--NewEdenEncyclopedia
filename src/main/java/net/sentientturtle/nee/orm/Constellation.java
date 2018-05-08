@@ -1,11 +1,11 @@
 package net.sentientturtle.nee.orm;
 
+import net.sentientturtle.nee.pages.Page;
 import net.sentientturtle.nee.util.ResourceLocation;
 import net.sentientturtle.nee.data.DataSupplier;
-import net.sentientturtle.nee.util.Tuple2;
+import net.sentientturtle.util.tuple.Tuple2;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
 import java.util.OptionalDouble;
 import java.util.OptionalInt;
 import java.util.Set;
@@ -15,6 +15,7 @@ import java.util.stream.Stream;
 /**
  * Data object representing EVE Online Constellations
  */
+@SuppressWarnings("WeakerAccess")
 public class Constellation implements Mappable {
     public final int regionID;
     public final int constellationID;
@@ -103,8 +104,8 @@ public class Constellation implements Mappable {
     }
 
     @Override
-    public ResourceLocation getIcon(DataSupplier dataSupplier) {
-        return new ResourceLocation("7_64_4.png", ResourceLocation.Type.ITEM_ICON, dataSupplier);
+    public ResourceLocation getIcon(DataSupplier dataSupplier, Page page) {
+        return new ResourceLocation("7_64_4.png", ResourceLocation.Type.ITEM_ICON, dataSupplier, page);
     }
 
     @Override

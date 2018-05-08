@@ -2,15 +2,16 @@ package net.sentientturtle.nee.components;
 
 import net.sentientturtle.nee.data.DataSupplier;
 import net.sentientturtle.nee.orm.Type;
-import net.sentientturtle.nee.util.Tuple2;
-import net.sentientturtle.nee.util.Tuple4;
+import net.sentientturtle.nee.pages.Page;
+import net.sentientturtle.util.tuple.Tuple2;
+import net.sentientturtle.util.tuple.Tuple4;
 /**
  * Displays shield stats of a ship {@link Type}
  * @see ShipResists
  */
 public class ShipShield extends ShipResists {
-    public ShipShield(Type type) {
-        super(type);
+    public ShipShield(Type type, DataSupplier dataSupplier, Page page) {
+        super(type, dataSupplier, page);
     }
 
     @Override
@@ -32,7 +33,7 @@ public class ShipShield extends ShipResists {
     protected String getRechargeText(DataSupplier dataSupplier) {
         double recharge = dataSupplier.getAttributeValues().getOrDefault(new Tuple2<>(super.type.typeID, 479), 0.0);
         if (recharge > 0) {
-            return "Shield recharge time: " + dataSupplier.unitify(recharge, dataSupplier.getAttributes().get(479).unitID);
+            return "Shield recharge time: " + dataSupplier.unitify(recharge, dataSupplier.getAttributes().get(479).unitID, page);
         } else {
             return null;
         }

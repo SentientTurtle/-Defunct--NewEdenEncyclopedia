@@ -1,4 +1,4 @@
-package net.sentientturtle.nee.util;
+package net.sentientturtle.util.collections;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -57,6 +57,7 @@ public class LockableList<E> implements List<E> {
         return backingList.toArray();
     }
 
+    @SuppressWarnings("SuspiciousToArrayCall")  // It's just a wrapper
     @NotNull
     @Override
     public <T> T[] toArray(@NotNull T[] a) {
@@ -113,6 +114,7 @@ public class LockableList<E> implements List<E> {
         backingList.clear();
     }
 
+    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")   // It's a wrapper
     @Override
     public boolean equals(Object o) {
         return backingList.equals(o);

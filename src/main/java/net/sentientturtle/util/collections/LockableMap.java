@@ -1,4 +1,4 @@
-package net.sentientturtle.nee.util;
+package net.sentientturtle.util.collections;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -102,6 +102,7 @@ public class LockableMap<K, V> implements Map<K, V>, Serializable {
         return backingMap.entrySet();
     }
 
+    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")   // It's a wrapper
     @Override
     public boolean equals(Object o) {
         return backingMap.equals(o);

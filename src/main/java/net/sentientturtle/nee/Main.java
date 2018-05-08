@@ -4,33 +4,25 @@ import com.almworks.sqlite4java.SQLiteConnection;
 import com.almworks.sqlite4java.SQLiteException;
 import net.sentientturtle.nee.data.DataSupplier;
 import net.sentientturtle.nee.data.SQLiteDataSupplier;
-import net.sentientturtle.nee.orm.SolarSystem;
-import net.sentientturtle.nee.pages.MapPage;
-import net.sentientturtle.nee.pages.Page;
 import net.sentientturtle.nee.pages.PageType;
-import net.sentientturtle.nee.pages.TypePage;
+import net.sentientturtle.nee.util.ResourceSupplier;
 import net.sentientturtle.nee.util.SDEUtils;
-import net.sentientturtle.nee.util.Tuple2;
-import net.sentientturtle.nee.util.Tuple3;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.json.JSONObject;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.TimeUnit;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
+import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipException;
 import java.util.zip.ZipOutputStream;
 
+@SuppressWarnings("WeakerAccess")
 public class Main {
     /**
      * Boolean flag to switch between normal output mode, and zip output mode, which saves pages in a zip archive, increasing performance.
@@ -41,72 +33,92 @@ public class Main {
      * Various config magic-variables, there should be no reason to change these.
      */
     private static final File sdeFile = new File("rsc/sqlite-latest.sqlite");
-    public static final String converterExecutable = "rsc/grannytemp/evegr2toobj/evegr2toobj.exe";
-    public static final String modelSourceFolder = "rsc/grannytemp/dx9";
-    public static final String modelOutputFolder = "rsc/grannytemp/out";
-    public static final String grannySqlite = "rsc/GRANNY-OUT.sqlite";
-    private static final String searchIndex = "rsc/searchindex.js";
+    public static final String CONVERTER_EXECUTABLE = "rsc/grannytemp/evegr2toobj/evegr2toobj.exe";
+    public static final String MODEL_SOURCE_FOLDER = "rsc/grannytemp/dx9";
+    public static final String MODEL_OUTPUT_FOLDER = "rsc/grannytemp/out";
+    public static final String GRANNY_SQLITE = "rsc/GRANNY-OUT.sqlite";
+    public static final String OUTPUT_DIR = "pages/";
 
     public static void main(String[] args) throws SQLiteException, IOException {
         long startTime = System.nanoTime();
         System.setProperty("sqlite4java.library.path", "native");
         sanityCheck();
-        DataSupplier dataSupplier = new SQLiteDataSupplier(new SQLiteConnection(sdeFile), grannySqlite);
+        FileUtils.cleanDirectory(new File(OUTPUT_DIR));
+
+        DataSupplier dataSupplier = new SQLiteDataSupplier(new SQLiteConnection(sdeFile), GRANNY_SQLITE);
         ZipOutputStream zipOutputStream;
         if (USE_ZIP) {
             /*
              * Most operating systems do not appreciate having to create thousands of files, saving to an archive is significantly faster.
              */
-            zipOutputStream = new ZipOutputStream(new FileOutputStream(new File("pages/html/pageArchive.zip")));
-            //zipOutputStream.setLevel(ZipOutputStream.STORED); TODO: Benchmark
+            zipOutputStream = new ZipOutputStream(new FileOutputStream(new File(OUTPUT_DIR + "pageArchive.zip")));
+            zipOutputStream.setLevel(Deflater.BEST_COMPRESSION);
         } else {
             zipOutputStream = null;
             for (PageType pageType : PageType.values()) {
-                new File("pages/html/" + pageType + "/").mkdir();
+                //noinspection ResultOfMethodCallIgnored
+                new File(OUTPUT_DIR + "html/" + pageType + "/").mkdir();
             }
         }
 
-        HashSet<String> folderSet = new HashSet<>();
 
-        JSONObject index = new JSONObject();
-
+        Set<String> folderSet = ConcurrentHashMap.newKeySet();
+        Set<String> resourceFileSet = ConcurrentHashMap.newKeySet();
         final int[] i = {0};
         PageType.pageStream(dataSupplier)
-                .peek(page -> index.put(page.getPageName(), page.getPageType() + "/" + page.getPageName() + ".html"))
-                .filter(page -> page.getPageName().equals("Badger"))
+//                .parallel()
+//                .filter(page -> page.getPageType() == PageType.STATIC || page.getPageName().equals("Badger")) // For easy testing
                 .forEach(page -> {
                     String pageName = page.getPageName();
-                    page.getHTML();
+//                    System.out.println("pageName = " + pageName); // Debug print to see if page generation halted
+                    page.getHTML(); // Side effect: Generate HTML outside synchronized block.
                     if (USE_ZIP && zipOutputStream != null) {
-                        try {
-                            zipOutputStream.putNextEntry(new ZipEntry(page.getPageType() + "/" + pageName + ".html"));
-                            zipOutputStream.write(page.getHTML().getBytes(StandardCharsets.UTF_8));
-                            zipOutputStream.closeEntry();
-                            i[0]++;
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                            try {
+                                for (Map.Entry<String, ResourceSupplier> entry : page.getFileDependencies().entrySet()) {
+                                    if (resourceFileSet.add(entry.getKey())) {
+                                        synchronized (zipOutputStream) {
+                                            zipOutputStream.putNextEntry(new ZipEntry(entry.getKey()));
+                                            zipOutputStream.write(entry.getValue().get());
+                                            zipOutputStream.closeEntry();
+                                        }
+                                    }
+                                }
+                                synchronized (zipOutputStream) {
+                                    zipOutputStream.putNextEntry(new ZipEntry(page.getPageType().getPageFilePath(pageName)));
+                                    zipOutputStream.write(page.getHTML().getBytes(StandardCharsets.UTF_8));
+                                    zipOutputStream.closeEntry();
+                                    i[0]++;
+                                }
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                     } else {
                         try {
-                            if (folderSet.add("pages/html/" + page.getPageType() + "/")) {
-                                new File("pages/html/" + page.getPageType() + "/").mkdirs();
+                            for (Map.Entry<String, ResourceSupplier> entry : page.getFileDependencies().entrySet()) {
+                                if (resourceFileSet.add(entry.getKey())) {
+                                    //noinspection ResultOfMethodCallIgnored
+                                    new File(OUTPUT_DIR + entry.getKey()).getParentFile().mkdirs();
+                                    FileOutputStream fileOutputStream = new FileOutputStream(OUTPUT_DIR + entry.getKey());
+                                    IOUtils.write(entry.getValue().get(), fileOutputStream);
+                                    fileOutputStream.flush();
+                                    fileOutputStream.close();
+                                }
                             }
-                            page.getHTML();
-                            FileOutputStream fileOutputStream = new FileOutputStream("pages/html/" + page.getPageType() + "/" + pageName + ".html");
+                            if (folderSet.add(new File(OUTPUT_DIR + page.getPageType().getPageFilePath(pageName)).getParent())) {
+                                //noinspection ResultOfMethodCallIgnored
+                                new File(OUTPUT_DIR + page.getPageType().getPageFilePath(pageName)).getParentFile().mkdirs();
+                            }
+                            FileOutputStream fileOutputStream = new FileOutputStream(OUTPUT_DIR + page.getPageType().getPageFilePath(pageName));
                             IOUtils.write(page.getHTML(), fileOutputStream, StandardCharsets.UTF_8);
                             fileOutputStream.flush();
                             fileOutputStream.close();
                             i[0]++;
                         } catch (IOException e) {
+                            System.err.println("Exception in page: " + page.toString());
                             e.printStackTrace();
                         }
                     }
                 });
-
-        FileWriter fileWriter = new FileWriter(searchIndex);
-        fileWriter.write("searchindex = " + index.toString(4));
-        fileWriter.flush();
-        fileWriter.close();
 
         if (USE_ZIP) {
             zipOutputStream.close();

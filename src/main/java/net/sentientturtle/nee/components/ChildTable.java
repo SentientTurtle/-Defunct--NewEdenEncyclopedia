@@ -1,5 +1,6 @@
 package net.sentientturtle.nee.components;
 
+import net.sentientturtle.nee.pages.Page;
 import net.sentientturtle.nee.util.PageReference;
 import net.sentientturtle.nee.data.DataSupplier;
 import net.sentientturtle.nee.orm.Group;
@@ -18,16 +19,18 @@ public class ChildTable extends Component {
     private Category category;
     private Group group;
 
-    public ChildTable(@NotNull Category category) {
+    public ChildTable(@NotNull Category category, DataSupplier dataSupplier, Page page) {
+        super(dataSupplier, page);
         this.category = category;
     }
 
-    public ChildTable(@NotNull Group group) {
+    public ChildTable(@NotNull Group group, DataSupplier dataSupplier, Page page) {
+        super(dataSupplier, page);
         this.group = group;
     }
 
     @Override
-    public String buildHTML(DataSupplier dataSupplier) {
+    public String buildHTML() {
         assert (category != null && group == null) || (group != null && category == null);
         StringBuilder builder = new StringBuilder();
 
@@ -51,10 +54,10 @@ public class ChildTable extends Component {
                 }
                 if (group.iconID != null) {
                     //language=HTML
-                    builder.append("<td><img src='").append(ResourceLocation.iconOfIconID(group.iconID, dataSupplier)).append("' height='64px' width='64px'></td><td><span class='child_table_span head_font'>").append(new PageReference(group.name, PageType.GROUP)).append("</span></td>");
+                    builder.append("<td><img src='").append(ResourceLocation.iconOfIconID(group.iconID, dataSupplier, page)).append("' height='64px' width='64px'></td><td><span class='child_table_span head_font'>").append(new PageReference(group.name, PageType.GROUP, page.getPageType().getFolderDepth())).append("</span></td>");
                 } else {
                     //language=HTML
-                    builder.append("<td><span class='categoryGroupSpacer' style='width:64px'></span></td><td><span class='child_table_span head_font'>").append(new PageReference(group.name, PageType.GROUP)).append("</span></td>");
+                    builder.append("<td><span class='categoryGroupSpacer' style='width:64px'></span></td><td><span class='child_table_span head_font'>").append(new PageReference(group.name, PageType.GROUP, page.getPageType().getFolderDepth())).append("</span></td>");
                 }
                 if (i.get() % TABLE_WIDTH == (TABLE_WIDTH - 1)) {
                     //language=HTML
@@ -70,10 +73,10 @@ public class ChildTable extends Component {
                 }
                 if (group.iconID != null) {
                     //language=HTML
-                    builder.append("<td><img src='").append(ResourceLocation.iconOfTypeID(type.typeID, dataSupplier)).append("' height='64px' width='64px'></td><td><span class='child_table_span head_font'>").append(new PageReference(type.name, PageType.TYPE)).append("</span></td>");
+                    builder.append("<td><img src='").append(ResourceLocation.iconOfTypeID(type.typeID, dataSupplier, page)).append("' height='64px' width='64px'></td><td><span class='child_table_span head_font'>").append(new PageReference(type.name, PageType.TYPE, page.getPageType().getFolderDepth())).append("</span></td>");
                 } else {
                     //language=HTML
-                    builder.append("<td><span class='child_table_spacer'></span></td><td><span class='child_table_span head_font'>").append(new PageReference(type.name, PageType.TYPE)).append("</span></td>");
+                    builder.append("<td><span class='child_table_spacer'></span></td><td><span class='child_table_span head_font'>").append(new PageReference(type.name, PageType.TYPE, page.getPageType().getFolderDepth())).append("</span></td>");
                 }
                 if (i.get() % TABLE_WIDTH == (TABLE_WIDTH - 1)) {
                     //language=HTML

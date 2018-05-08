@@ -5,18 +5,25 @@ import net.sentientturtle.nee.components.ChildTable;
 import net.sentientturtle.nee.components.Title;
 import net.sentientturtle.nee.data.DataSupplier;
 import net.sentientturtle.nee.orm.Category;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Page for a {@link Category}
  */
 public class CategoryPage extends Page {
+    @SuppressWarnings("WeakerAccess")
     public final Category category;
 
-    public CategoryPage(Category category, DataSupplier dataSupplier) {
+    CategoryPage(Category category, DataSupplier dataSupplier) {
         super(dataSupplier);
         this.category = category;
-        leftComponents.add(new Title(category.name, category.iconID != null ? ResourceLocation.iconOfIconID(category.iconID, dataSupplier) : null));
-        leftComponents.add(new ChildTable(category));
+    }
+
+    @Override
+    protected void init() {
+        //noinspection LanguageMismatch
+        leftComponents.add(new Title(category.name, getIcon(), dataSupplier, this));
+        leftComponents.add(new ChildTable(category, dataSupplier, this));
     }
 
     @Override
@@ -27,5 +34,16 @@ public class CategoryPage extends Page {
     @Override
     public String getPageName() {
         return category.name.replaceAll("[\\\\/:*?\"<>|\t]", "");
+    }
+
+    @Nullable
+    @Override
+    public ResourceLocation getIcon() {
+        return category.iconID != null ? ResourceLocation.iconOfIconID(category.iconID, dataSupplier, this) : null;
+    }
+
+    @Override
+    protected boolean isMonoColumn() {
+        return true;
     }
 }

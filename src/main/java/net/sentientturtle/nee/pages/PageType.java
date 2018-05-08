@@ -22,9 +22,20 @@ public enum PageType {
                 dataSupplier.getSolarSystems().stream()
         ).flatMap(Function.identity())
                 .map(mappable -> new MapPage(mappable, dataSupplier));
-    });
+    }),
+    STATIC(dataSupplier -> Stream.of(new SearchResults(dataSupplier), new IndexPage(dataSupplier))) {
+        @Override
+        public String getPageFilePath(String pageName) {
+            return pageName + ".html";
+        }
 
-    private final Function<DataSupplier, Stream<Page>> streamSupplier;
+        @Override
+        public int getFolderDepth() {
+            return 0;
+        }
+    };
+
+    public final Function<DataSupplier, Stream<Page>> streamSupplier;
 
     /**
      * @param streamSupplier Function that returns a stream of all pages of the type, using a specified data supplier.
@@ -35,6 +46,7 @@ public enum PageType {
 
     /**
      * Utility method to get a single stream containing all pages that can be generated.
+     *
      * @param dataSupplier Data supplier to use.
      * @return Stream containing all pages that can be generated.
      */
@@ -45,5 +57,18 @@ public enum PageType {
     @Override
     public String toString() {
         return name().toLowerCase();
+    }
+
+    /**
+     * Returns the file path for a page of this type with the given name
+     * @param pageName Name for the page
+     * @return File path for the given page name
+     */
+    public String getPageFilePath(String pageName) {
+        return this.name().toLowerCase() + "/" + pageName + ".html";
+    }
+
+    public int getFolderDepth() {
+        return 1;
     }
 }
