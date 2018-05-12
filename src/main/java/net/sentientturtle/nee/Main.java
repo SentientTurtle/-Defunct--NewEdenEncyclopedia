@@ -10,13 +10,13 @@ import net.sentientturtle.nee.util.SDEUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.TimeUnit;
 import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
@@ -27,7 +27,7 @@ public class Main {
     /**
      * Boolean flag to switch between normal output mode, and zip output mode, which saves pages in a zip archive, increasing performance.
      */
-    private static final boolean USE_ZIP = false;
+    private static final boolean USE_ZIP = true;
 
     /*
      * Various config magic-variables, there should be no reason to change these.

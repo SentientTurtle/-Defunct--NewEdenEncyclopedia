@@ -1,6 +1,7 @@
 package net.sentientturtle.nee.pages;
 
 import net.sentientturtle.nee.components.Component;
+import net.sentientturtle.nee.util.PageReference;
 import net.sentientturtle.nee.util.ResourceLocation;
 import net.sentientturtle.nee.data.DataSupplier;
 import net.sentientturtle.nee.util.ResourceSupplier;
@@ -168,7 +169,7 @@ public abstract class Page {
         return  "<div id='header'>\n" +
                 "        <span class='header_span'>\n" +
                 "            <img height='64' width='64' src='" + new ResourceLocation("bookicon.png", ResourceLocation.Type.FILE, dataSupplier, this) + "'>\n" +
-                "            <b id='header_text' class='head_font'>New Eden Encyclopedia</b>\n" +
+                "            <b id='header_text' class='head_font'>" + new PageReference("index", PageType.STATIC, "New Eden Encyclopedia", this.getPageType().getFolderDepth()) + "</b>\n" +
                 "        </span>\n" +
                 "    <span class='header_span header_search'>" +
                 "       <form class='head_font' action='" + (this.getPageType() == PageType.STATIC ? "" : "../") + PageType.STATIC.getPageFilePath("SearchResults") + "'>Search: <input class='head_font' id='search_input' type='text' placeholder='Search...' name='search'></form>" +
