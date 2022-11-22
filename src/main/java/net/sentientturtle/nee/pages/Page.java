@@ -45,7 +45,7 @@ public abstract class Page {
     }
 
     /**
-     * Initializes this page; used to lazy intialization of this page object
+     * Initializes this page; used to lazy initialization of this page object
      */
     protected abstract void init();
 
